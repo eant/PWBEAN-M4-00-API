@@ -8,38 +8,45 @@ const server = express()
 const port = 2000
 const header = { "Content-Type" : "application/json; charset=utf-8" }
 
-let personas = null
+let peliculas = null
 
-const db = new loki("datos.json", {
+const db = new loki("nerdflix.json", {
 	autoload : true,
 	autosave : true,
 	autosaveInterval : 5000,
 	autoloadCallback : () => {
-		//Obtener la colección "personas" o crear la colección "personas"
-		personas = db.getCollection("personas") || db.addCollection("personas")
+		//Obtener la colección "peliculas" o crear la colección "peliculas"
+		peliculas = db.getCollection("peliculas") || db.addCollection("peliculas")
 	}
 })
 
 
 /* Configuraciones */
 server.listen( port )
+
 server.use( bodyParser.urlencoded({ extended : false }) )
 server.use( bodyParser.json() )
+server.use( express.static("./public") )
+
+server.set('json spaces', 4)
 
 /* Procesos */
 server.get("/api", (req, res) => {
-	//console.log(personas)
+	res.json( peliculas.data )
+})
+server.get("/api/:id", (req, res) => {
+	let elID = req.params.id
 
-	res.set( header )
-	res.json( personas.data )
+	let laPelicula = peliculas.get(elID) || { error : "pelicula no encontrada" }
+
+	res.json( laPelicula )
 })
 
 server.post("/api", (req, res) => {
 
-	let persona = req.body
+	let pelicula = req.body
+	console.log( pelicula )
 
-	personas.insert(persona)
-
-	res.set( header )
+	peliculas.insert(pelicula)
 	res.json({ "rta" : "ok" })
 })
