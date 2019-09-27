@@ -31,9 +31,13 @@ server.use( express.static("./public") )
 server.set('json spaces', 4)
 
 /* Procesos */
+
+// ↓ Obtener todas las peliculas...
 server.get("/api", (req, res) => {
 	res.json( peliculas.data )
 })
+
+// ↓ Obtener una sola pelicula x ID...
 server.get("/api/:id", (req, res) => {
 	let elID = req.params.id
 
@@ -42,6 +46,7 @@ server.get("/api/:id", (req, res) => {
 	res.json( laPelicula )
 })
 
+// ↓ Crear una nueva pelicula...
 server.post("/api", (req, res) => {
 
 	let pelicula = req.body
@@ -49,4 +54,24 @@ server.post("/api", (req, res) => {
 
 	peliculas.insert(pelicula)
 	res.json({ "rta" : "ok" })
+})
+
+// ↓ Actualizar una pelicula por ID...
+server.put("/api/:id", (req, res) => {
+
+	let elID = req.params.id
+
+	let laPelicula = peliculas.get(elID)
+
+	let nuevosDatos = req.body
+
+	laPelicula.titulo = nuevosDatos.titulo
+	laPelicula.descripcion = nuevosDatos.descripcion
+	laPelicula.estreno = nuevosDatos.estreno
+	laPelicula.poster = nuevosDatos.poster
+	laPelicula.trailer = nuevosDatos.trailer
+
+	peliculas.update(laPelicula)
+
+	res.json({ "pelicula_actualizada" : laPelicula })
 })
