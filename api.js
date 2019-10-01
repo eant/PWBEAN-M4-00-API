@@ -2,11 +2,19 @@
 const express = require("express")
 const bodyParser = require("body-parser")
 const loki = require("lokijs")
+const joi = require('@hapi/joi')
 
 /* Auxiliares */
 const server = express()
-const port = 2000
-const header = { "Content-Type" : "application/json; charset=utf-8" }
+const port = 80
+
+const schema = joi.object({
+	titulo : joi.string(),
+	descripcion : joi.string(),
+	estreno : joi.number().integer(),
+	poster : joi.string(),
+	trailer : joi.string()
+})
 
 let peliculas = null
 
@@ -50,17 +58,23 @@ server.get("/api/:id", (req, res) => {
 server.post("/api", (req, res) => {
 
 	let pelicula = req.body
-	console.log( pelicula )
+	//console.log( pelicula )
 
-	peliculas.insert(pelicula)
-	res.json({ "rta" : "ok" })
+	 let rta = schema.validate( pelicula )
+
+	 if( rta.error ){
+		res.json({ "rta" : rta.error.details[0].message })
+	 } else {
+		peliculas.insert(pelicula)
+		res.json({ "rta" : "ok" })
+	 }
+
 })
 
 // ↓ Actualizar una pelicula por ID...
 server.put("/api/:id", (req, res) => {
 
 	let elID = req.params.id
-
 	let laPelicula = peliculas.get(elID)
 
 	let nuevosDatos = req.body
@@ -74,4 +88,14 @@ server.put("/api/:id", (req, res) => {
 	peliculas.update(laPelicula)
 
 	res.json({ "pelicula_actualizada" : laPelicula })
+})
+
+// ↓ Borrar una pelicula por ID...
+server.delete("/api/:id", (req, res) => {
+	let elID = req.params.id
+	let laPelicula = peliculas.get(elID)
+
+	peliculas.remove( laPelicula )
+
+	res.json({ "pelicula_borrada" : laPelicula })
 })
