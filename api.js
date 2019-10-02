@@ -9,11 +9,11 @@ const server = express()
 const port = 80
 
 const schema = joi.object({
-	titulo : joi.string(),
-	descripcion : joi.string(),
-	estreno : joi.number().integer(),
-	poster : joi.string(),
-	trailer : joi.string()
+	titulo : joi.string().alphanum().min(3).max(50).required(),
+	descripcion : joi.string().max(280).required(),
+	estreno : joi.number().integer().min(1895).max( (new Date().getFullYear()) ),
+	poster : joi.string().uri(),
+	trailer : joi.string().uri()
 })
 
 let peliculas = null
@@ -58,12 +58,20 @@ server.get("/api/:id", (req, res) => {
 server.post("/api", (req, res) => {
 
 	let pelicula = req.body
-	//console.log( pelicula )
 
-	 let rta = schema.validate( pelicula )
+	 let rta = schema.validate( pelicula, { abortEarly : false })
 
 	 if( rta.error ){
-		res.json({ "rta" : rta.error.details[0].message })
+
+	 	let errores = rta.error.details.map(function(error){
+	 		let msg = new Object()
+
+	 		msg[error.path[0]] = error.message
+
+	 		return msg 
+	 	})
+
+		res.json( { "errores" : errores })
 	 } else {
 		peliculas.insert(pelicula)
 		res.json({ "rta" : "ok" })
