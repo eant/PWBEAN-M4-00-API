@@ -3,13 +3,14 @@ const express = require("express")
 const bodyParser = require("body-parser")
 const loki = require("lokijs")
 const joi = require('@hapi/joi')
+const hb = require("express-handlebars")
 
 /* Auxiliares */
 const server = express()
 const port = 80
 
 const schema = joi.object({
-	titulo : joi.string().alphanum().min(3).max(50).required(),
+	titulo : joi.string().min(3).max(50).required(),
 	descripcion : joi.string().max(280).required(),
 	estreno : joi.number().integer().min(1895).max( (new Date().getFullYear()) ),
 	poster : joi.string().uri(),
@@ -36,9 +37,33 @@ server.use( bodyParser.urlencoded({ extended : false }) )
 server.use( bodyParser.json() )
 server.use( express.static("./public") )
 
+server.engine(".hbs", hb({ extname : ".hbs", defaultLayout : "main" }) )
+
+server.set("view engine", ".hbs")
+
 server.set('json spaces', 4)
 
+
 /* Procesos */
+server.get("/panel", (req, res) => {
+	res.render("panel", {
+		title : "Nerdflix Generator",
+		films : peliculas.data
+	})
+})
+server.get("/panel/nueva", (req, res) => {
+	res.render("pelicula", { title : "Nueva pelicula" })
+})
+
+server.get("/panel/actualizar/:id", (req, res) => {
+	let elID = req.params.id
+
+	res.render("pelicula", {
+		title : "Actualizar pelicula",
+		film : peliculas.get(elID)
+	})
+
+})
 
 // ↓ Obtener todas las peliculas...
 server.get("/api", (req, res) => {

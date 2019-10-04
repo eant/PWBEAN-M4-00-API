@@ -1,0 +1,34 @@
+<form action="api/" method="post" class="m-auto">
+  <!-- TITULO -->
+  <div class="form-group">
+    <label>Titulo:</label>
+    <input value="{{film.titulo}}" type="text" name="titulo" class="form-control" placeholder="Ej: NANANANA BATMAN!">
+  </div>
+
+  <!-- DESCRIPCION -->
+  <div class="form-group">
+    <label>Descripción:</label>
+    <textarea name="descripcion" class="form-control" rows="3">{{film.descripcion}}</textarea>
+  </div>
+  
+  <!-- ESTRENO -->
+  <div class="form-group">
+    <label>Estreno:</label>
+    <input value="{{film.estreno}}" type="number" name="estreno" class="form-control" placeholder="Ej: 1495">
+  </div>
+
+  <!-- POSTER -->
+  <div class="form-group">
+    <label>Poster:</label>
+    <input value="{{film.poster}}" type="text" name="poster" class="form-control" placeholder="Ej: http://nananana.com/batman.jpg">
+  </div>
+
+  <!-- TRAILER -->
+  <div class="form-group">
+    <label>Trailer:</label>
+    <input value="{{film.trailer}}" type="text" name="trailer" class="form-control" placeholder="Ej: https://www.youtube.com/watch?v=n0FyQcw4SkE">
+  </div>          
+  
+  <!-- ENVIAR -->
+  <button type="submit" class="btn btn-primary">Enviar</button>
+</form>
