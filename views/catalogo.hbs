@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Nerdflix | {{title}}</title>
+		<link rel="shortcut icon" href="img/favicon.ico">
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/heroic-features.css">
+		<link rel="stylesheet" href="css/nerdflix.css">
+	</head>
+	<body>
+	    <h1><a class="" href="#"><img src="img/nerdflix.png" class="img-responsive" /></a></h1>
+	
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12 text-center">
+					<h3>{{title}}</h3>
+				</div>
+			</div>
+			<div class="row text-center" id="peliculas">
+			{{#each films}}
+				<div class="col-md-3 col-sm-4 pelicula">
+					<div class="thumbnail">
+						<img src="{{this.poster}}" alt="">
+						<div class="caption">
+							<h4>{{this.titulo}}</h4>
+							<p>{{this.estreno}}</p>
+							<p><a href="#playMovie" id="{{this.$loki}}" class="btn btn-primary">Ver ahora</a></p>
+						</div>
+					</div>
+				</div>
+    		{{/each}}
+			</div>
+		</div>
+		<div class="container" id="playMovie">
+			<div class="row">
+				<div class="col-lg-12">
+					<h1 class="page-header" id="titulo">TITULO (1900)</h1>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-8">
+					<iframe width="750" height="400" src="img/sin-video.jpg" frameborder="0" allowfullscreen></iframe>
+					<h3>Descripcion:</h3>
+					<p id="descripcion">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem nobis praesentium eum voluptate temporibus, obcaecati quod aspernatur eius modi recusandae, sequi quae. Provident illo eligendi sequi repellat harum, rerum, animi!</p>
+				</div>
+				<div class="col-md-4">
+					<img id="imagen" class="img-responsive" src="img/sin-foto.jpg" alt="">
+				</div>
+			</div>
+		</div>
+		<script>
+			const links = document.querySelectorAll(".pelicula a[href='#playMovie']")
+
+			links.forEach(link => {
+
+				link.onclick = function(){
+
+					fetch(`http://localhost/api/${this.id}/`).then( rta => rta.json() ).then(pelicula => {
+
+						document.querySelector("#titulo").innerText = `${pelicula.titulo} (${pelicula.estreno})`
+						document.querySelector("#descripcion").innerText = pelicula.descripcion
+						document.querySelector("#imagen").src = pelicula.poster
+						document.querySelector("iframe").src = pelicula.trailer
+
+					})
+				}
+
+			})
+		</script>
+	</body>
+</html>

@@ -17,8 +17,8 @@
       <td>{{this.titulo}}</td>
       <td>{{this.estreno}}</td>
       <td>
-        <a href="panel/actualizar/{{this.$loki}}/" class="btn btn-primary">UPDATE</a>
-        <button class="btn btn-danger">DELETE</button>
+        <a href="actualizar/{{this.$loki}}/" class="btn btn-primary">UPDATE</a>
+        <button id="{{this.$loki}}" class="btn btn-danger">DELETE</button>
       </td>
     </tr>
     {{/each}}
@@ -26,3 +26,22 @@
   </tbody>
 </table>
 <!-- FIN DE LAS PELICULAS -->
+<script>
+  const terminators = document.querySelectorAll("button")
+
+  terminators.forEach(terminator => {
+
+    terminator.onclick = function(){
+
+      if( confirm("Hasta la vista... baby?") ){
+
+        fetch(`http://localhost/api/${this.id}`, { method : "DELETE" }).then(rta => {
+          this.parentNode.parentNode.remove()
+        })
+
+      }
+
+    }
+
+  })
+</script>

@@ -35,7 +35,7 @@ server.listen( port )
 
 server.use( bodyParser.urlencoded({ extended : false }) )
 server.use( bodyParser.json() )
-server.use( express.static("./public") )
+server.use( express.static("./nerdflix") )
 
 server.engine(".hbs", hb({ extname : ".hbs", defaultLayout : "main" }) )
 
@@ -45,6 +45,14 @@ server.set('json spaces', 4)
 
 
 /* Procesos */
+server.get("/", (req, res) => {
+	res.render("catalogo", {
+		layout : false,
+		title : "Ultimos estrenos de Marvel",
+		films : peliculas.data
+	})
+})
+
 server.get("/panel", (req, res) => {
 	res.render("panel", {
 		title : "Nerdflix Generator",
@@ -59,6 +67,7 @@ server.get("/panel/actualizar/:id", (req, res) => {
 	let elID = req.params.id
 
 	res.render("pelicula", {
+		url : `${req.protocol}://${req.hostname}`,
 		title : "Actualizar pelicula",
 		film : peliculas.get(elID)
 	})
@@ -105,7 +114,7 @@ server.post("/api", (req, res) => {
 })
 
 // ↓ Actualizar una pelicula por ID...
-server.put("/api/:id", (req, res) => {
+server.post("/api/:id", (req, res) => {
 
 	let elID = req.params.id
 	let laPelicula = peliculas.get(elID)

@@ -1,0 +1,12 @@
+html{background:#FFF}
+body{background:#e50914;color:#FFF}
+h1{margin:0}
+h1 img{margin:auto}
+h3{text-shadow: 2px 2px 1px #000;text-transform:uppercase}
+.btn-primary{background-color:#e50914;border-color:#141414;border-radius:0;text-transform:uppercase}
+.btn-primary:hover{background-color:#141414;border-color:#e50914;color:#e50914}
+.btn-primary:focus,.btn-primary:active{background-color:#e50914 !important;border-color:#FFF}
+.thumbnail{border-radius:0}
+.pelicula{margin-bottom:30px}
+.pelicula h4{font-size:14px}
+#peliculas{margin-top:30px}
